@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const uri = "mongodb+srv://gfvictor:admin@stamp-card-cluster.2vsjw.mongodb.net/?retryWrites=true&w=majority&appName=stamp-card-cluster";
+const uri = "mongodb+srv://encode-test:encode@stamp-card-cluster.2vsjw.mongodb.net/?retryWrites=true&w=majority&appName=stamp-card-cluster";
 
 const connectDB = async() => {
     try {
