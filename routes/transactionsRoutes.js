@@ -24,25 +24,57 @@ router.post('/', async (req, res) => {
             return res.status(400).json({message: "Rule doesn't belong to store!"});
         }
 
-        const newTransaction = new Transaction(req.body);
-        const savedTransaction = await newTransaction.save();
+        let pointsResult;
 
-        return type === "accumulate"
-            ? (() => {
+        if (type === "accumulate") {
                 const newPoints = new Point({
                     client_id,
                     store_id,
-                    transaction_id: savedTransaction._id,
+                    transaction_id: null,
                     points: point_changes,
                     created_at: new Date(),
                 });
-                const savedPoints = newPoints.save();
-                res.status(201).json({
-                    transaction: savedTransaction,
-                    points: savedPoints,
-                });
-            })()
-            : res.status(201).json(savedTransaction);
+                pointsResult = await newPoints.save();
+            }
+
+        if (type === "redeem") {
+            const totalPoints = await Point.aggregate([
+                { $match: {client_id: client._id, store_id: store._id} },
+                { $group: {_id: null, total: {$sum: "$points"}} }
+            ]);
+
+            const currentPoints = totalPoints[0]?.total || 0;
+
+            if (currentPoints < point_changes) {
+                return res.status(400).json({message: "Insufficient points for the transaction!"})
+            }
+
+            const newPoints = new Point({
+                client_id,
+                store_id,
+                transaction_id: null,
+                points: -point_changes,
+                created_at: new Date()
+            });
+            pointsResult = await newPoints.save();
+        }
+
+        const newTransaction = await new Transaction({
+            ...req.body,
+            created_at: new Date(),
+        });
+
+        const savedTransaction = await newTransaction.save();
+
+        if (pointsResult) {
+            pointsResult.transaction_id = savedTransaction._id;
+            await pointsResult.save();
+        }
+
+        res.status(201).json({
+            transaction: savedTransaction,
+            points: pointsResult || null,
+        });
 
     } catch (err) {
         res.status(500).json({error: err.message});
