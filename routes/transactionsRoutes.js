@@ -31,6 +31,7 @@ router.post('/', async (req, res) => {
                     client_id,
                     store_id,
                     transaction_id: null,
+                    reason: "Acúmulo de pontos",
                     points: point_changes,
                     created_at: new Date(),
                 });
@@ -53,6 +54,7 @@ router.post('/', async (req, res) => {
                 client_id,
                 store_id,
                 transaction_id: null,
+                reason: "Resgate de pontos",
                 points: -point_changes,
                 created_at: new Date()
             });
