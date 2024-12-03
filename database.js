@@ -6,8 +6,8 @@ const connectDB = async() => {
     try {
         await mongoose.connect(uri, {serverSelectionTimeoutMS: 5000});
     } catch (err) {
-        console.error('Erro ao conectar com MongoDB:', err);
-        process.exit(1);
+        console.error('Error connecting to MongoDB:', err);
+        throw new Error("Critical error while establishing database connection!")
     }
 };
 
