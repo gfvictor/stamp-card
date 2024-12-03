@@ -11,11 +11,16 @@ const pointsRoutes = require('./routes/pointsRoutes');
 
 const app = express();
 
-connectDB().then(() => console.log('MongoDB conectado com sucesso!'));
 
-app.listen(5000, () => {
-  console.log('Servidor rodando na porta 5000.')
-})
+(async () => {
+    try {
+        await connectDB();
+        console.log("Database connection successfully established.")
+    } catch (err) {
+        console.error(err.message);
+        process.exit(1);
+    }
+})();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -23,15 +28,13 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 
-// api routes reserved space lol
 app.use('/api/clients', clientRoutes);
 app.use('/api/stores', storeRoutes);
-app.use('/api/transaction', transactionsRoutes);
+app.use('/api/transactions', transactionsRoutes);
 app.use('/api/points', pointsRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({error: 'Not found'});
-  next();
 });
 
 app.use((err, req, res) => {
@@ -45,5 +48,9 @@ app.use((err, req, res) => {
     }
   });
 });
+
+app.listen(8080, () => {
+  console.log('Server running on port 8080.')
+})
 
 module.exports = app;
