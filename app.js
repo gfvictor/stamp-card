@@ -33,7 +33,7 @@ app.use('/api/stores', storeRoutes);
 app.use('/api/transactions', transactionsRoutes);
 app.use('/api/points', pointsRoutes);
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).json({error: 'Not found'});
 });
 
