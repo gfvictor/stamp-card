@@ -1,5 +1,3 @@
-// const path = require('path');
-// const cookieParser = require('cookie-parser');
 const express = require('express');
 const logger = require('morgan');
 const connectDB = require('./database')
@@ -25,8 +23,7 @@ const app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/api/clients', clientRoutes);
 app.use('/api/stores', storeRoutes);
@@ -37,14 +34,11 @@ app.use((req, res) => {
   res.status(404).json({error: 'Not found'});
 });
 
-app.use((err, req, res) => {
-  const status =  err.status || 500;
-  const message = err.message || 'Internal Server Error';
+app.use((err, req, res, next) => {
 
-  res.status(status).json({
+  res.status(err.status || 500).json({
     error: {
-      status: status,
-      message: message,
+      message: err.message || "Internal Server Error",
     }
   });
 });
