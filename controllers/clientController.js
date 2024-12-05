@@ -11,7 +11,6 @@ class ClientController {
             res.status(201).json(newClient);
 
         } catch (err) {
-            console.error("Error on adding client:", err.message);
             res.status(500).json({ error: err.message });
         }
     }
@@ -22,7 +21,6 @@ class ClientController {
             res.status(200).json(clients);
 
         } catch (err) {
-            console.error("Error while searching for clients:", err.message);
             res.status(500).json({ error: err.message });
         }
     }
@@ -33,7 +31,6 @@ class ClientController {
             res.status(200).json(client)
 
         } catch (err) {
-            console.error("Error while searching for client:", err.message);
             res.status(500).json({ error: err.message });
         }
     }
@@ -44,7 +41,6 @@ class ClientController {
             res.status(200).json(client);
 
         } catch (err) {
-            console.error("Error on client update:", err.message);
             res.status(500).json({ error: err.message });
         }
     }
@@ -54,7 +50,6 @@ class ClientController {
             await this.service.deleteClient(req.params.id);
             res.status(200).send("Client successfully deleted.");
         } catch (err) {
-            console.error("Error on client deletion:", err.message);
             res.status(500).json({ error: err.message });
         }
     }
