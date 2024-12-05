@@ -1,26 +1,30 @@
 const Client = require("../models/client");
 
 class ClientRepository {
+    constructor(clientModel) {
+        this.clientModel = clientModel;
+    }
+
     async create(clientData) {
-        const client = new Client(clientData);
+        const client = new this.clientModel(clientData);
         return await client.save();
     }
 
     async findAll() {
-        await Client.find();
+        return await this.clientModel.find();
     }
 
     async findById(clientId) {
-        await Client.findById(clientId);
+        return await this.clientModel.findById(clientId);
     }
 
     async update(clientId, updateData) {
-        await Client.findByIdAndUpdate(clientId, updateData);
+        return await this.clientModel.findByIdAndUpdate(clientId, updateData);
     }
 
     async delete(clientId) {
-        await Client.findByIdAndDelete(clientId);
+        return await this.clientModel.findByIdAndDelete(clientId);
     }
 }
 
-module.exports = new ClientRepository();
+module.exports = new ClientRepository(Client);

@@ -1,9 +1,13 @@
 const clientService = require('../services/clientService');
 
 class ClientController {
+    constructor(service) {
+        this.service = service;
+    }
+
     async createClient(req, res) {
         try {
-            const newClient = await clientService.createClient(req.body);
+            const newClient = await this.service.createClient(req.body);
             res.status(201).json(newClient);
 
         } catch (err) {
@@ -14,7 +18,7 @@ class ClientController {
 
     async getAllClients (req, res) {
         try {
-            const clients = await clientService.getAllClients();
+            const clients = await this.service.getAllClients();
             res.status(200).json(clients);
 
         } catch (err) {
@@ -25,7 +29,7 @@ class ClientController {
 
     async getClientById (res, req) {
         try {
-            const client = await clientService.getClientById(req.params.id);
+            const client = await this.service.getClientById(req.params.id);
             res.status(200).json(client)
 
         } catch (err) {
@@ -36,7 +40,7 @@ class ClientController {
 
     async updateClient(req, res) {
         try {
-            const client = await clientService.updateClient(req.params.id, req.body);
+            const client = await this.service.updateClient(req.params.id, req.body);
             res.status(200).json(client);
 
         } catch (err) {
@@ -47,8 +51,8 @@ class ClientController {
 
     async deleteClient (req, res) {
         try {
-            await clientService.deleteClient(req.params.id);
-            res.status(200).send();
+            await this.service.deleteClient(req.params.id);
+            res.status(200).send("Client successfully deleted.");
         } catch (err) {
             console.error("Error on client deletion:", err.message);
             res.status(500).json({ error: err.message });
@@ -56,4 +60,4 @@ class ClientController {
     }
 }
 
-module.exports = new ClientController();
+module.exports = new ClientController(clientService);

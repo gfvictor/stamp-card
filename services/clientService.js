@@ -1,27 +1,30 @@
 const clientRepository = require('../repositories/clientRepository');
 
 class ClientService {
+    constructor(repository) {
+        this.repository = repository;
+    }
     async createClient(clientData) {
-        await clientRepository.create(clientData);
+        return this.repository.create(clientData);
     }
 
     async getAllClients() {
-        await clientRepository.findAll();
+        return await this.repository.findAll();
     }
 
     async getClientById(clientId) {
-        const client = await clientRepository.findById(clientId);
+        const client = await this.repository.findById(clientId);
         if (!client) throw new Error("Client not found!");
         return client;
     }
 
     async updateClient(clientId, updateData) {
-        await clientRepository.update(clientId, updateData);
+        return await this.repository.update(clientId, updateData);
     }
 
     async deleteClient(clientId) {
-        await clientRepository.delete(clientId);
+        return await this.repository.delete(clientId);
     }
 }
 
-module.exports = new ClientService();
+module.exports = new ClientService(clientRepository);
